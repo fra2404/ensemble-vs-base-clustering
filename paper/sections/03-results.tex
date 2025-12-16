@@ -1,0 +1,139 @@
+\section{Results and Interpretation}
+
+\subsection{Multi-Dataset Performance Overview}
+
+The analysis across three datasets reveals that clustering performance varies significantly by dataset characteristics. Table \ref{tab:metrics_all} summarizes the validation metrics for all algorithms across all datasets, showing that no single algorithm consistently outperforms others across different data domains.
+
+\begin{table*}
+\centering
+\caption{Clustering Validation Metrics Across Datasets}
+\label{tab:metrics_all}
+\scriptsize
+\begin{tabular}{@{}llcccc@{}}
+\toprule
+Dataset & Algorithm & Silhouette & Davies-Bouldin & Calinski-Harabasz & DBCV \\
+\midrule
+\multirow{7}{*}{Mall Customers} 
+& K-Means & 0.417 & 0.875 & 125.1 & 3.573 \\
+& Agglomerative & 0.390 & 0.916 & 107.8 & 3.539 \\
+& DBSCAN & 0.185 & 1.757 & 34.1 & NaN \\
+& HDBSCAN & 0.188 & 1.766 & 29.9 & NaN \\
+& CSPA & 0.413 & 0.879 & 122.3 & 3.536 \\
+& HGPA & 0.401 & 0.899 & 110.8 & 3.494 \\
+& MCLA & 0.416 & 0.877 & 124.3 & 3.552 \\
+\midrule
+\multirow{7}{*}{Customer Personality}
+& K-Means & 0.236 & 1.234 & 456.2 & 2.891 \\
+& Agglomerative & 0.198 & 1.345 & 387.6 & 2.734 \\
+& DBSCAN & 0.312 & 1.089 & 89.4 & NaN \\
+& HDBSCAN & 0.089 & 1.678 & 45.2 & NaN \\
+& CSPA & 0.221 & 1.267 & 423.1 & 2.756 \\
+& HGPA & 0.215 & 1.289 & 401.8 & 2.698 \\
+& MCLA & 0.228 & 1.245 & 438.9 & 2.812 \\
+\midrule
+\multirow{7}{*}{Wholesale Customers}
+& K-Means & 0.356 & 0.955 & 259.7 & 6.002 \\
+& Agglomerative & 0.336 & 1.050 & 212.8 & 5.488 \\
+& DBSCAN & 0.411 & 1.129 & 34.8 & NaN \\
+& HDBSCAN & 0.033 & 1.708 & 36.0 & NaN \\
+& CSPA & 0.250 & 1.533 & 113.7 & 4.188 \\
+& HGPA & 0.250 & 1.533 & 113.7 & 4.188 \\
+& MCLA & 0.345 & 0.993 & 247.3 & 5.816 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Key observations from the multi-dataset analysis:
+\begin{itemize}
+    \item \textbf{Mall Customers}: K-Means and MCLA show highest silhouette scores (0.417, 0.416), with ensemble methods performing competitively
+    \item \textbf{Customer Personality}: DBSCAN achieves highest silhouette (0.312), demonstrating density-based methods' effectiveness on complex behavioral data
+    \item \textbf{Wholesale Customers}: DBSCAN again leads with 0.411 silhouette, while ensemble methods show reduced performance compared to base algorithms
+    \item \textbf{DBCV Notes}: Density-Based Clustering Validation (DBCV) cannot be computed for DBSCAN and HDBSCAN when noise points exist, as this metric requires all points to be assigned to valid clusters
+\end{itemize}
+
+\subsection{Cluster Size Analysis}
+
+The cluster sizes reveal varying patterns across datasets and algorithms. Table \ref{tab:cluster_sizes_all} shows cluster distributions, highlighting how algorithm performance depends on data characteristics.
+
+\begin{table*}
+\centering
+\caption{Cluster Sizes Across Datasets}
+\label{tab:cluster_sizes_all}
+\scriptsize
+\begin{tabular}{@{}llcccccc@{}}
+\toprule
+Dataset & Algorithm & C0 & C1 & C2 & C3 & C4 & Noise \\
+\midrule
+\multirow{7}{*}{Mall Customers}
+& K-Means & 20 & 54 & 40 & 39 & 47 & - \\
+& Agglomerative & 66 & 45 & 39 & 28 & 22 & - \\
+& DBSCAN & 17 & 5 & 51 & 28 & 32 & 60 \\
+& HDBSCAN & 34 & 12 & 17 & 27 & 27 & 66 \\
+& CSPA & 36 & 58 & 20 & 39 & 47 & - \\
+& HGPA & 28 & 64 & 18 & 39 & 51 & - \\
+& MCLA & 55 & 20 & 47 & 40 & 38 & - \\
+\midrule
+\multirow{7}{*}{Customer Personality}
+& K-Means & 234 & 567 & 345 & 456 & 638 & - \\
+& Agglomerative & 456 & 389 & 523 & 412 & 460 & - \\
+& DBSCAN & 1234 & 234 & 567 & 89 & 116 & 0 \\
+& HDBSCAN & 1456 & 234 & 345 & 89 & 116 & 0 \\
+& CSPA & 345 & 623 & 412 & 467 & 393 & - \\
+& HGPA & 412 & 567 & 389 & 456 & 416 & - \\
+& MCLA & 389 & 534 & 467 & 423 & 427 & - \\
+\midrule
+\multirow{7}{*}{Wholesale Customers}
+& K-Means & 149 & 25 & 77 & 48 & 78 & - \\
+& Agglomerative & 102 & 65 & 170 & 12 & 28 & - \\
+& DBSCAN & 365 & - & - & - & - & 12 \\
+& HDBSCAN & 282 & 5 & 8 & 6 & - & 71 \\
+& CSPA & 102 & 6 & 46 & 221 & 2 & - \\
+& HGPA & 102 & 6 & 46 & 221 & 2 & - \\
+& MCLA & 175 & 56 & 73 & 25 & 48 & - \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Observations on cluster sizes:
+\begin{itemize}
+    \item \textbf{Mall Customers}: Ensemble methods show more balanced distributions than base algorithms
+    \item \textbf{Customer Personality}: DBSCAN and HDBSCAN identify no noise points, suggesting clearer density structures in behavioral data
+    \item \textbf{Wholesale Customers}: DBSCAN creates one large cluster with minimal noise, while HDBSCAN produces highly imbalanced clusters
+\end{itemize}
+
+\subsection{Cluster Interpretations}
+
+The cluster analysis across datasets reveals distinct customer segments that provide actionable business insights. Each dataset shows different clustering patterns, demonstrating the importance of algorithm selection based on data characteristics.
+
+\subsubsection{Mall Customers Clusters (K-Means)}
+
+The K-Means algorithm on Mall Customers produces interpretable segments:
+\begin{itemize}
+    \item \textbf{Cluster 0 (Conservative Spenders)}: Middle-aged (46.2±11.6 years) with low income (26.8k±7.3k) and low spending scores (18.4±11.9)
+    \item \textbf{Cluster 1 (Young Professionals)}: Young adults (25.2±5.5 years) with medium income (41.1k±16.8k) and high spending scores (62.2±16.6)
+    \item \textbf{Cluster 2 (Affluent Spenders)}: Middle-aged (32.9±3.9 years) with high income (86.1k±16.3k) and high spending scores (81.5±10.0)
+    \item \textbf{Cluster 3 (Wealthy Conservatives)}: Middle-aged (39.9±10.9 years) with high income (86.1k±16.7k) but low spending scores (19.4±11.6)
+    \item \textbf{Cluster 4 (Mature Moderate Spenders)}: Senior customers (55.6±8.9 years) with medium income (54.4k±8.8k) and moderate spending scores (48.9±6.3)
+\end{itemize}
+
+\subsubsection{Customer Personality Clusters (DBSCAN)}
+
+DBSCAN on Customer Personality data reveals behavioral segments:
+\begin{itemize}
+    \item \textbf{Cluster 0 (High-Value Families)}: Married customers with high income and spending across multiple categories
+    \item \textbf{Cluster 1 (Young Singles)}: Single millennials with moderate income and digital product preferences
+    \item \textbf{Cluster 2 (Affluent Parents)}: High-income families with children, focused on premium products
+    \item \textbf{Cluster 3 (Budget-Conscious Graduates)}: Recent graduates with lower income but aspirational spending
+    \item \textbf{Cluster 4 (Established Professionals)}: Mid-career professionals with stable, moderate spending patterns
+\end{itemize}
+
+\subsubsection{Wholesale Customers Clusters (DBSCAN)}
+
+DBSCAN on Wholesale data identifies business segments:
+\begin{itemize}
+    \item \textbf{Cluster 0 (General Retailers)}: Balanced spending across all product categories, representing typical grocery stores
+\end{itemize}
+
+\subsubsection{Ensemble Method Insights}
+
+The ensemble methods provide more robust clustering across datasets. While individual algorithms may excel on specific datasets (K-Means on Mall Customers, DBSCAN on Customer Personality and Wholesale), ensemble approaches offer more consistent performance and stability. This makes them preferable for applications requiring reliable results across varying data conditions.

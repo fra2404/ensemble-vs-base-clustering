@@ -1,0 +1,58 @@
+\section{Implementation Details}
+
+The complete implementation of all clustering algorithms, ensemble methods, stability analysis, and multi-dataset evaluation is available on GitHub at \url{https://github.com/fra2404/customer-segmentation-clustering.git}.
+
+\subsection{Multi-Dataset Pipeline}
+
+The analysis pipeline supports three customer datasets with automated preprocessing:
+\begin{itemize}
+    \item Robust data loading with format detection (CSV separators, missing values)
+    \item Outlier removal using IQR method for data quality
+    \item Feature transformation and standardization with RobustScaler
+    \item Configurable dataset selection for comparative analysis
+\end{itemize}
+
+\subsection{Ensemble Method Algorithms}
+
+\footnotesize
+\begin{verbatim}
+Algorithm 1: CSPA Ensemble Clustering
+
+Input: base_labels_list, n_clusters_final
+Output: final_labels
+
+n_samples <- length(base_labels_list[0])
+n_models <- length(base_labels_list)
+similarity <- zeros(n_samples, n_samples)
+for i in 0 to n_samples-1:
+  for j in 0 to n_samples-1:
+    sim <- 0
+    for each labels in base_labels_list:
+      if labels[i] == labels[j]:
+        sim <- sim + 1
+    similarity[i][j] <- sim / n_models
+final_labels <- SpectralClustering(n_clusters_final,
+  affinity='precomputed').fit_predict(similarity)
+return final_labels
+
+Algorithm 2: Bootstrap Stability Analysis
+
+Input: X, clustering_func, n_boot
+Output: ari_scores, vi_scores
+
+base_labels <- clustering_func(X)
+ari_scores <- []
+vi_scores <- []
+for _ in 1 to n_boot:
+  indices <- random_choice(n_samples, n_samples,
+    replace=True)
+  X_boot <- X[indices]
+  labels_boot <- clustering_func(X_boot)
+  ari <- adjusted_rand_score(base_labels[indices],
+    labels_boot)
+  vi <- variation_of_information(base_labels[indices],
+    labels_boot)
+  append ari to ari_scores
+  append vi to vi_scores
+return ari_scores, vi_scores
+\end{verbatim}

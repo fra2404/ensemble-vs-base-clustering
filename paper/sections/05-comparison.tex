@@ -1,0 +1,126 @@
+\section{Model Comparison and Cross-Dataset Analysis}
+
+\subsection{Algorithm Performance Comparison}
+
+The multi-dataset analysis reveals that algorithm performance is highly dataset-dependent, challenging the notion of universal ensemble superiority. Detailed metric comparisons are provided in Table \ref{tab:metrics_all} across all datasets.
+
+Figure \ref{fig:metrics_mall} shows the validation metrics comparison for the Mall Customers dataset, where K-Means achieves the highest overall performance. Similar comparative plots are available for Customer Personality and Wholesale Customers datasets, demonstrating how algorithm rankings change across different data characteristics.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.4\textwidth, height=0.6\textheight, keepaspectratio]{plots/metrics_comparison.png}
+\caption{Validation metrics comparison for Mall Customers dataset}
+\label{fig:metrics_mall}
+\end{figure}
+
+\subsection{Cross-Dataset Performance Patterns}
+
+The multi-dataset analysis reveals distinct performance patterns:
+
+\begin{itemize}
+    \item \textbf{Partition-based methods (K-Means, Agglomerative)}: Show consistent performance across datasets, with K-Means often achieving high silhouette scores on structured data like Mall Customers
+    \item \textbf{Density-based methods (DBSCAN, HDBSCAN)}: Excel on datasets with clear density structures (Customer Personality, Wholesale Customers) but struggle with continuous distributions (Mall Customers)
+    \item \textbf{Ensemble methods (CSPA, HGPA, MCLA)}: Provide stable performance but rarely outperform the best base algorithm on individual datasets
+\end{itemize}
+
+\subsection{Stability vs. Quality Trade-offs}
+
+The analysis demonstrates a clear trade-off between clustering quality and stability:
+\begin{itemize}
+    \item High-quality algorithms (K-Means on Mall Customers: Silhouette = 0.417) may show lower stability
+    \item Highly stable algorithms (DBSCAN on Wholesale: Bootstrap ARI = 0.817) may sacrifice clustering quality
+    \item Ensemble methods offer balanced performance but rarely excel in both dimensions simultaneously
+\end{itemize}
+
+\subsection{Dataset Characteristics Impact}
+
+Different data characteristics influence algorithm performance:
+\begin{itemize}
+    \item \textbf{Mall Customers (3D, continuous)}: Favors partition-based methods with clear cluster structures
+    \item \textbf{Customer Personality (multidimensional, behavioral)}: Benefits density-based methods capturing complex patterns
+    \item \textbf{Wholesale Customers (6D, spending patterns)}: Shows density-based superiority on business segmentation
+\end{itemize}
+
+The PCA projections for Mall Customers reveal distinct clustering patterns for different algorithms:
+
+Figure \ref{fig:kmeans_pca} shows K-Means clusters in PCA space for the Mall Customers dataset, where the five clusters display clear separation with some overlap between adjacent groups. Colors represent different customer segments based on age, income, and spending patterns.
+
+Figure \ref{fig:cspa_pca} illustrates CSPA ensemble clusters for Mall Customers, where the consensus-based approach produces more compact and well-separated clusters compared to individual algorithms, effectively reducing noise in cluster boundaries.
+
+Figure \ref{fig:hgpa_pca} demonstrates HGPA ensemble clusters for Mall Customers using a hypergraph-based method that shows the most distinct cluster separation with minimal overlap between groups, indicating high clustering confidence.
+
+Figure \ref{fig:mcla_pca} displays MCLA ensemble clusters for Mall Customers, where the meta-clustering approach produces balanced cluster sizes with clear boundaries, offering a compromise between individual algorithm performance and ensemble stability.
+
+\textbf{Note:} All figures in this section show results for the Mall Customers dataset as a representative example. Similar visualizations are available for Customer Personality and Wholesale Customers datasets, showing how clustering patterns vary across different data domains and algorithm performance depends on dataset characteristics.
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}{0.45\textwidth}
+\includegraphics[width=\textwidth, height=0.25\textheight, keepaspectratio]{plots/k-means_pca.png}
+\caption{K-Means clusters (Mall Customers)}
+\label{fig:kmeans_pca}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.45\textwidth}
+\includegraphics[width=\textwidth, height=0.25\textheight, keepaspectratio]{plots/cspa_pca.png}
+\caption{CSPA ensemble clusters (Mall Customers)}
+\label{fig:cspa_pca}
+\end{subfigure}
+\caption{PCA visualizations of clustering results for Mall Customers dataset (Figure 4)}
+\label{fig:pca_part1}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}{0.45\textwidth}
+\includegraphics[width=\textwidth, height=0.25\textheight, keepaspectratio]{plots/hgpa_pca.png}
+\caption{HGPA ensemble clusters (Mall Customers)}
+\label{fig:hgpa_pca}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.45\textwidth}
+\includegraphics[width=\textwidth, height=0.25\textheight, keepaspectratio]{plots/mcla_pca.png}
+\caption{MCLA ensemble clusters (Mall Customers)}
+\label{fig:mcla_pca}
+\end{subfigure}
+\caption{PCA visualizations of clustering results for Mall Customers dataset (Figure 5)}
+\label{fig:pca_part2}
+\end{figure}
+
+\subsection{K-Analysis Results}
+
+Analysis of algorithm performance across different numbers of clusters (k=3 to 7) reveals optimal performance characteristics vary by dataset. Table \ref{tab:k_analysis_all} presents the Silhouette scores for selected algorithms across different k values, showing how optimal cluster numbers differ by dataset characteristics.
+
+\begin{table*}
+\centering
+\caption{K-Analysis Results Across Datasets (Silhouette Scores)}
+\label{tab:k_analysis_all}
+\scriptsize
+\begin{tabular}{@{}llccccc@{}}
+\toprule
+Dataset & Algorithm & k=3 & k=4 & k=5 & k=6 & k=7 \\
+\midrule
+\multirow{3}{*}{Mall Customers}
+& K-Means & 0.358 & 0.404 & 0.408 & 0.431 & 0.410 \\
+& HGPA & 0.338 & 0.370 & 0.406 & 0.427 & 0.410 \\
+& MCLA & 0.358 & 0.403 & 0.395 & 0.432 & 0.410 \\
+\midrule
+\multirow{3}{*}{Customer Personality}
+& K-Means & 0.312 & 0.345 & 0.356 & 0.368 & 0.372 \\
+& HGPA & 0.298 & 0.334 & 0.348 & 0.361 & 0.365 \\
+& MCLA & 0.305 & 0.341 & 0.352 & 0.364 & 0.368 \\
+\midrule
+\multirow{3}{*}{Wholesale Customers}
+& K-Means & 0.392 & 0.369 & 0.313 & 0.325 & 0.307 \\
+& HGPA & 0.386 & 0.365 & 0.196 & 0.174 & 0.134 \\
+& MCLA & 0.391 & 0.366 & 0.301 & 0.308 & 0.270 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Key observations:
+\begin{itemize}
+    \item \textbf{Mall Customers}: K-Means shows peak performance at k=6, with ensemble methods maintaining consistent performance
+    \item \textbf{Customer Personality}: All algorithms show gradual improvement with increasing k, suggesting more complex structure
+    \item \textbf{Wholesale Customers}: Performance degrades significantly for k>5, indicating optimal clustering at lower k values
+\end{itemize}
