@@ -22,4 +22,4 @@ This folder contains all materials required for the final submission of the data
 ## Official Repository
 
 All code and materials are available in the official repository:
-https://github.com/fra2404/customer-segmentation-clustering
+https://github.com/fra2404/ensemble-vs-base-clustering/tree/main
