@@ -7,13 +7,12 @@ This project explores and compares the effectiveness of ensemble clustering meth
 ## Project Structure
 
 ```
-/
+final_submission/
 ├── code/         # All Python scripts and modules
 ├── dataset/      # Datasets used for analysis
 ├── plots/        # Generated plots and visualizations (output)
 ├── results/      # Output metrics and results (generated at runtime)
 ├── doc/          # Documentation and paper PDF
-├── paper/        # LaTeX sources of the paper
 ├── .gitignore
 └── README.md
 ```
@@ -51,7 +50,7 @@ All datasets are located in the `dataset/` folder.
 
 1. **Set up the environment:**
 
-   - Recommended: Use the provided conda environment (see `doc/` for details).
+  - Recommended: Use the provided conda environment (e.g. `conda activate ai`).
    - Required packages: `scikit-learn`, `matplotlib`, `seaborn`, `pandas`, `numpy`, `hdbscan`, etc.
 
 2. **Install dependencies:**
@@ -73,14 +72,11 @@ Outputs:
 - Plots: `plots/`
 - Metrics CSV: `results/metrics_<dataset>.csv`
 
-3. **Outputs:**
-   - Plots: `plots/`
-   - Metrics: `results/metrics_<dataset>.csv`
-   - Interpretations and summaries: printed to console and saved in `results/`
+Interpretations and summaries are printed to console.
 
 ## Paper
 
-A detailed scientific paper describing the methodology, experiments, and findings is available in `doc/main.pdf` (PDF). LaTeX sources are in `paper/`.
+A detailed scientific paper describing the methodology, experiments, and findings is available in `doc/main.pdf` (PDF).
 
 - Literature review
 - Methodological details
