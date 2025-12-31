@@ -1,7 +1,32 @@
-import pandas as pd
+from __future__ import annotations
+
+from datetime import date
+from pathlib import Path
+
 import numpy as np
-from sklearn.preprocessing import StandardScaler, RobustScaler
+import pandas as pd
 from sklearn.cluster import DBSCAN
+from sklearn.preprocessing import RobustScaler, StandardScaler
+
+
+def _project_root() -> Path:
+    return Path(__file__).resolve().parent.parent
+
+
+def _default_dataset_path(dataset: str) -> Path:
+    dataset_dir = _project_root() / "dataset"
+    mapping = {
+        "mall_customers": "Mall_Customers.csv",
+        "customer_personality": "customer_personality.csv",
+        "wholesale_customers": "wholesale_customers.csv",
+    }
+    try:
+        filename = mapping[dataset]
+    except KeyError as exc:
+        raise ValueError(
+            "Dataset not supported. Choose 'mall_customers', 'customer_personality', or 'wholesale_customers'"
+        ) from exc
+    return dataset_dir / filename
 
 
 def load_and_preprocess_data(dataset='mall_customers', filepath=None):
@@ -16,22 +41,22 @@ def load_and_preprocess_data(dataset='mall_customers', filepath=None):
     - X_raw: Original features
     - X: Standardized features
     """
+    if filepath is None:
+        filepath = _default_dataset_path(dataset)
+    filepath = Path(filepath)
+
     if dataset == 'mall_customers':
-        if filepath is None:
-            filepath = '../dataset/Mall_Customers.csv'
         df = pd.read_csv(filepath)
         features = ['Age', 'Annual Income (k$)', 'Spending Score (1-100)']
         X_raw = df[features].dropna()
         scaler = StandardScaler()
         X = scaler.fit_transform(X_raw)
     elif dataset == 'customer_personality':
-        if filepath is None:
-            filepath = '../dataset/Customer_Personality.csv'
         df = pd.read_csv(filepath, sep=None, engine='python')  # Auto-detect separator
         # Select relevant features for customer segmentation
         features = ['Year_Birth', 'Income', 'Recency']
         # Convert Year_Birth to Age
-        df['Age'] = 2025 - df['Year_Birth']
+        df['Age'] = date.today().year - df['Year_Birth']
         # Convert Income to thousands (k$)
         df['Income'] = df['Income'] / 1000
         features = ['Age', 'Income', 'Recency']
@@ -57,8 +82,6 @@ def load_and_preprocess_data(dataset='mall_customers', filepath=None):
         scaler = RobustScaler()
         X = scaler.fit_transform(X_raw)
     elif dataset == 'wholesale_customers':
-        if filepath is None:
-            filepath = '../dataset/Wholesale_Customers.csv'
         df = pd.read_csv(filepath)
         # Select 3 main features for customer segmentation
         features = ['Fresh', 'Milk', 'Grocery']
@@ -77,8 +100,9 @@ def load_and_preprocess_data(dataset='mall_customers', filepath=None):
         scaler = RobustScaler()
         X = scaler.fit_transform(X_raw)
     else:
-        raise ValueError("Dataset not supported. Choose 'mall_customers', 'customer_personality', or 'wholesale_customers'")
-
+        raise ValueError(
+            "Dataset not supported. Choose 'mall_customers', 'customer_personality', or 'wholesale_customers'"
+        )
     return X_raw, X
 
 

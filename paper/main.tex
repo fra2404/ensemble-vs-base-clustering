@@ -1,0 +1,87 @@
+
+% ICDM 2025 Conference Paper Template
+% Advanced Clustering Ensemble Methods with Stability Analysis
+
+\documentclass[10pt,conference]{IEEEtran}
+
+% Packages
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{fancyhdr}
+
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{listings}
+
+\definecolor{headergray}{gray}{0.6}
+\addtolength{\topmargin}{10pt}
+
+% Code highlighting
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny,
+    frame=single,
+    breaklines=true,
+    captionpos=b
+}
+
+\begin{document}
+
+% Paper title
+\title{Advanced Clustering Ensemble Methods with Stability Analysis: \\ A Comprehensive Study on Customer Segmentation}
+
+% Author information
+\author{
+\IEEEauthorblockN{Francesco Albano}
+\IEEEauthorblockA{
+Student ID: LJ2506219\\
+School of Computer Science\\
+Beihang University (BUAA)\\
+Beijing, China\\
+Email: francescoalbano@buaa.edu.cn, francescoalbano357@gmail.com}
+}
+
+\pagestyle{fancy}
+\fancyhead[C]{\textcolor{headergray}{Final Project – Student ID: LJ2506219 – Data Mining}}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\thepage}
+\setlength{\footskip}{40pt}
+
+% Make the title area
+\maketitle
+
+% Abstract
+\begin{abstract}
+This paper presents a comprehensive analysis of advanced clustering techniques applied to customer segmentation using three real-world datasets: Mall Customers, Customer Personality, and Wholesale Customers. Seven clustering algorithms are implemented and compared: four base methods (K-Means, Agglomerative Clustering, DBSCAN, HDBSCAN) and three ensemble approaches (CSPA, HGPA, MCLA). The study employs multiple validation metrics including Silhouette Score, Davies-Bouldin Index, Calinski-Harabasz Index, and Density-Based Clustering Validation (DBCV).
+
+A key aspect of this work is the thorough stability analysis using bootstrap resampling and noise injection techniques to assess the robustness of clustering solutions under data perturbations. The analysis reveals that ensemble methods do not universally outperform base methods; their superiority depends on dataset characteristics and clustering objectives.
+
+Results across datasets show varying performance patterns: K-Means achieves relatively high silhouette scores on some datasets, while DBSCAN demonstrates superior stability in specific scenarios. The study includes detailed cluster interpretations that translate numerical results into actionable business insights for customer segmentation strategies, validated through empirical testing on multiple datasets.
+\end{abstract}
+
+% Keywords
+\begin{IEEEkeywords}
+Clustering Ensemble, Stability Analysis, Customer Segmentation, Bootstrap Validation, Noise Injection, Multi-Dataset Evaluation, Mall Customers, Customer Personality, Wholesale Customers
+\end{IEEEkeywords}
+
+% Include individual sections
+\input{sections/01-introduction}
+\input{sections/02-methodology}
+\input{sections/03-results}
+\input{sections/04-stability}
+\input{sections/05-comparison}
+\input{sections/06-discussion}
+\input{sections/08-implementation}
+
+\end{document}

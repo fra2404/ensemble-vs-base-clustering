@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
@@ -6,7 +10,7 @@ from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 
 
-def plot_clusters_pca(X, labels, title, filename):
+def plot_clusters_pca(X, labels, title, filename, output_dir="plots"):
     """
     Generate a 2D scatter plot using PCA for clustering results.
 
@@ -25,11 +29,13 @@ def plot_clusters_pca(X, labels, title, filename):
     plt.figure(figsize=(8, 6))
     sns.scatterplot(data=df, x='PC1', y='PC2', hue='Cluster', palette='viridis')
     plt.title(title)
-    plt.savefig(f'plots/{filename}.png')
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    plt.savefig(output_dir / f"{filename}.png")
     plt.close()
 
 
-def plot_similarity_heatmap(similarity_matrix, title, filename):
+def plot_similarity_heatmap(similarity_matrix, title, filename, output_dir="plots"):
     """
     Plot heatmap of similarity matrix.
 
@@ -41,11 +47,13 @@ def plot_similarity_heatmap(similarity_matrix, title, filename):
     plt.figure(figsize=(8, 6))
     sns.heatmap(similarity_matrix, cmap='viridis', square=True)
     plt.title(title)
-    plt.savefig(f'plots/{filename}.png')
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    plt.savefig(output_dir / f"{filename}.png")
     plt.close()
 
 
-def plot_metrics_comparison(metrics_df, filename):
+def plot_metrics_comparison(metrics_df, filename, output_dir="plots"):
     """
     Bar chart for metrics comparison.
 
@@ -58,11 +66,13 @@ def plot_metrics_comparison(metrics_df, filename):
     plt.ylabel('Score')
     plt.xticks(rotation=45)
     plt.tight_layout()
-    plt.savefig(f'plots/{filename}.png')
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    plt.savefig(output_dir / f"{filename}.png")
     plt.close()
 
 
-def plot_stability_boxplot(stability_data, filename):
+def plot_stability_boxplot(stability_data, filename, output_dir="plots"):
     """
     Boxplot for stability metrics.
 
@@ -97,11 +107,13 @@ def plot_stability_boxplot(stability_data, filename):
     axes[1].tick_params(axis='x', rotation=45)
 
     plt.tight_layout()
-    plt.savefig(f'plots/{filename}.png', dpi=300)
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    plt.savefig(output_dir / f"{filename}.png", dpi=300)
     plt.close()
 
 
-def plot_noise_stability(noise_data, filename):
+def plot_noise_stability(noise_data, filename, output_dir="plots"):
     """
     Bar chart for noise injection stability.
 
@@ -115,11 +127,13 @@ def plot_noise_stability(noise_data, filename):
     plt.ylabel('Score')
     plt.xticks(rotation=45)
     plt.tight_layout()
-    plt.savefig(f'plots/{filename}.png')
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    plt.savefig(output_dir / f"{filename}.png")
     plt.close()
 
 
-def plot_metrics_paper_version(results_df, dataset_name):
+def plot_metrics_paper_version(results_df, dataset_name, output_dir="plots"):
     """
     Create paper-quality metrics comparison plots with appropriate scales.
 
@@ -182,13 +196,15 @@ def plot_metrics_paper_version(results_df, dataset_name):
         axes[1,1].text(i, v + 0.01, f'{v:.3f}', ha='center', va='bottom', fontsize=9)
 
     plt.tight_layout()
-    plt.savefig(f'plots/metrics_paper_{dataset_name}.png', dpi=300, bbox_inches='tight')
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    plt.savefig(output_dir / f"metrics_paper_{dataset_name}.png", dpi=300, bbox_inches='tight')
     plt.close()
 
-    print(f"Paper-quality metrics plot saved as: plots/metrics_paper_{dataset_name}.png")
+    print(f"Paper-quality metrics plot saved as: {output_dir / f'metrics_paper_{dataset_name}.png'}")
 
 
-def plot_elbow_analysis(X, k_range, dataset_name):
+def plot_elbow_analysis(X, k_range, dataset_name, output_dir="plots"):
     """
     Create Elbow plot for K-selection justification.
     
@@ -235,10 +251,12 @@ def plot_elbow_analysis(X, k_range, dataset_name):
     axes[1].legend()
     
     plt.tight_layout()
-    plt.savefig(f'plots/elbow_analysis_{dataset_name}.png', dpi=300, bbox_inches='tight')
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    plt.savefig(output_dir / f"elbow_analysis_{dataset_name}.png", dpi=300, bbox_inches='tight')
     plt.close()
     
-    print(f"Elbow analysis plot saved as: plots/elbow_analysis_{dataset_name}.png")
+    print(f"Elbow analysis plot saved as: {output_dir / f'elbow_analysis_{dataset_name}.png'}")
     
     # Return optimal k based on elbow (simple heuristic: max second derivative)
     if len(inertias) > 2:

@@ -5,15 +5,16 @@ __pycache__/
 .ipynb_checkpoints/
 .env
 
-paper/
+# LaTeX build artifacts (keep sources and PDF)
+paper/**/*.aux
+paper/**/*.log
+paper/**/*.out
+paper/**/*.toc
+paper/**/*.blg
+paper/**/*.bbl
+paper/**/*.synctex.gz
+paper/**/*.fdb_latexmk
+paper/**/*.fls
 
-plots/
-paper/**.aux
-paper/**.log
-paper/**.out
-paper/**.toc
-paper/**.blg
-paper/**.bbl
-paper/**.synctex.gz
-paper/**.fdb_latexmk
-paper/**.fls
+# Optional: local editor/OS artifacts
+.vscode/

@@ -10,6 +10,12 @@ from plots import plot_clusters_pca, plot_similarity_heatmap, plot_metrics_compa
 from utils import cluster_sizes, hgpa_ensemble, mcla_ensemble
 from sklearn.cluster import AgglomerativeClustering, DBSCAN, KMeans
 
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
+PLOTS_DIR = os.path.join(PROJECT_ROOT, "plots")
+RESULTS_DIR = os.path.join(PROJECT_ROOT, "results")
+
 # CLI configuration: choose dataset without modifying code
 parser = argparse.ArgumentParser(description="Run clustering analysis on a chosen dataset")
 parser.add_argument(
@@ -23,8 +29,8 @@ args = parser.parse_args()
 DATASET = args.dataset
 
 # Create directories
-os.makedirs('plots', exist_ok=True)
-os.makedirs('results', exist_ok=True)
+os.makedirs(PLOTS_DIR, exist_ok=True)
+os.makedirs(RESULTS_DIR, exist_ok=True)
 
 # Load and preprocess data
 X_raw, X = load_and_preprocess_data(dataset=DATASET)
@@ -34,7 +40,7 @@ print(f"Data loaded and standardized for {DATASET}. Shape:", X.shape)
 print("\n" + "="*50)
 print("K-SELECTION ANALYSIS (Elbow Method)")
 print("="*50)
-optimal_k_elbow, optimal_k_sil = plot_elbow_analysis(X, range(2, 11), DATASET)
+optimal_k_elbow, optimal_k_sil = plot_elbow_analysis(X, range(2, 11), DATASET, output_dir=PLOTS_DIR)
 print(f"Using k=5 for this analysis (balances quality and interpretability)")
 print("="*50 + "\n")
 
@@ -54,8 +60,9 @@ print("All clustering completed.")
 
 # Evaluate
 metrics_df = evaluate_all_algorithms(X, algorithms)
-metrics_df.to_csv(f'results/metrics_{DATASET}.csv')
-print(f"Metrics computed and saved to results/metrics_{DATASET}.csv")
+metrics_path = os.path.join(RESULTS_DIR, f"metrics_{DATASET}.csv")
+metrics_df.to_csv(metrics_path)
+print(f"Metrics computed and saved to {metrics_path}")
 print(metrics_df)
 
 # Interpretations
@@ -82,13 +89,13 @@ for k in k_range:
     print(f"k={k}: K-Means Sil={km_metrics['Silhouette Score']:.3f}, HGPA Sil={hg_metrics['Silhouette Score']:.3f}, MCLA Sil={mc_metrics['Silhouette Score']:.3f}")
 
 # Stability
-stability_data = perform_stability_analysis(X, algorithms)
-noise_data = perform_noise_stability_analysis(X, algorithms)
+stability_data = perform_stability_analysis(X, algorithms, eps=eps_db, min_samples=min_samples_db)
+noise_data = perform_noise_stability_analysis(X, algorithms, eps=eps_db, min_samples=min_samples_db)
 print("Stability analysis completed.")
 
 # Plots
 for name, labels in algorithms.items():
-    plot_clusters_pca(X, labels, f'{name} Clusters (PCA)', f'{name.lower()}_pca_{DATASET}')
+    plot_clusters_pca(X, labels, f'{name} Clusters (PCA)', f'{name.lower()}_pca_{DATASET}', output_dir=PLOTS_DIR)
 
 # Similarity for CSPA
 n_samples = len(X)
@@ -98,14 +105,22 @@ for i in range(n_samples):
     for j in range(n_samples):
         sim = sum(1 for labels in base_labels_list if labels[i] == labels[j])
         similarity[i, j] = sim / len(base_labels_list)
-plot_similarity_heatmap(similarity, 'CSPA Similarity Matrix', f'cspa_similarity_{DATASET}')
+plot_similarity_heatmap(similarity, 'CSPA Similarity Matrix', f'cspa_similarity_{DATASET}', output_dir=PLOTS_DIR)
 
-plot_metrics_comparison(metrics_df[['Silhouette Score', 'Davies-Bouldin Index', 'Calinski-Harabasz Index']], f'metrics_comparison_{DATASET}')
-plot_metrics_paper_version(metrics_df[['Silhouette Score', 'Davies-Bouldin Index', 'Calinski-Harabasz Index']], DATASET)
-plot_stability_boxplot(stability_data, f'stability_bootstrap_{DATASET}')
-plot_noise_stability(noise_data, f'stability_noise_{DATASET}')
+plot_metrics_comparison(
+    metrics_df[['Silhouette Score', 'Davies-Bouldin Index', 'Calinski-Harabasz Index']],
+    f'metrics_comparison_{DATASET}',
+    output_dir=PLOTS_DIR,
+)
+plot_metrics_paper_version(
+    metrics_df[['Silhouette Score', 'Davies-Bouldin Index', 'Calinski-Harabasz Index']],
+    DATASET,
+    output_dir=PLOTS_DIR,
+)
+plot_stability_boxplot(stability_data, f'stability_bootstrap_{DATASET}', output_dir=PLOTS_DIR)
+plot_noise_stability(noise_data, f'stability_noise_{DATASET}', output_dir=PLOTS_DIR)
 
-print("All plots generated in plots/ directory.")
+print(f"All plots generated in {PLOTS_DIR}.")
 
 # Summary
 print("\nStability Summary (Bootstrap ARI mean, VI mean):")
@@ -129,4 +144,4 @@ best_stable = max(stability_data, key=lambda x: np.mean(stability_data[x]['ARI']
 print(f"Most stable method: {best_stable}")
 
 print("\nProject completed successfully!")
-print("Check plots/ for visualizations and results/metrics.csv for metrics.")
+print(f"Check {PLOTS_DIR} for visualizations and {RESULTS_DIR} for metrics.")

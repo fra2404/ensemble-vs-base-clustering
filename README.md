@@ -7,21 +7,22 @@ This project explores and compares the effectiveness of ensemble clustering meth
 ## Project Structure
 
 ```
-final_submission/
+/
 ├── code/         # All Python scripts and modules
 ├── dataset/      # Datasets used for analysis
-├── plots/        # Generated plots and visualizations
-├── doc/          # Documentation and the scientific paper (PDF)
-├── results/      # Output metrics and results
-├── .gitignore    # Excludes cache, plots, and temp files
-└── README.md     # Project documentation (this file)
+├── plots/        # Generated plots and visualizations (output)
+├── results/      # Output metrics and results (generated at runtime)
+├── doc/          # Documentation and paper PDF
+├── paper/        # LaTeX sources of the paper
+├── .gitignore
+└── README.md
 ```
 
 ## Datasets
 
 - **Mall_Customers.csv**
-- **Customer_Personality.csv**
-- **Wholesale_Customers.csv**
+- **customer_personality.csv**
+- **wholesale_customers.csv**
 
 All datasets are located in the `dataset/` folder.
 
@@ -53,15 +54,24 @@ All datasets are located in the `dataset/` folder.
    - Recommended: Use the provided conda environment (see `doc/` for details).
    - Required packages: `scikit-learn`, `matplotlib`, `seaborn`, `pandas`, `numpy`, `hdbscan`, etc.
 
-2. **Run the main script:**
+2. **Install dependencies:**
 
-   - From the `code/` directory, you can select the dataset via CLI:
-     ```sh
-     python3 main.py --dataset mall_customers
-     python3 main.py --dataset customer_personality
-     python3 main.py --dataset wholesale_customers
-     ```
-   - All results, plots, and metrics will be saved in the appropriate folders.
+```sh
+python3 -m pip install -r code/requirements.txt
+```
+
+3. **Run the main script (from this `final_submission/` folder):**
+
+```sh
+python3 code/main.py --dataset mall_customers
+python3 code/main.py --dataset customer_personality
+python3 code/main.py --dataset wholesale_customers
+```
+
+Outputs:
+
+- Plots: `plots/`
+- Metrics CSV: `results/metrics_<dataset>.csv`
 
 3. **Outputs:**
    - Plots: `plots/`
@@ -70,7 +80,7 @@ All datasets are located in the `dataset/` folder.
 
 ## Paper
 
-A detailed scientific paper describing the methodology, experiments, and findings is available in the `doc/` folder (PDF format). The paper includes:
+A detailed scientific paper describing the methodology, experiments, and findings is available in `doc/main.pdf` (PDF). LaTeX sources are in `paper/`.
 
 - Literature review
 - Methodological details
