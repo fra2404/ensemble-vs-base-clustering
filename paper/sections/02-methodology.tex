@@ -1,0 +1,31 @@
+\section{Methodology}
+
+In this study, a comprehensive approach is employed to evaluate clustering algorithms across three real-world customer datasets, comparing four base methods with three ensemble techniques. The analysis focuses on customer segmentation using standardized features after robust preprocessing including outlier removal and feature transformation. The use of multi-dataset validation is a key strength of this framework, enabling robust and generalizable conclusions both for each individual dataset and across diverse data characteristics.
+
+\subsection{Clustering Algorithms}
+
+\subsubsection{Base Algorithms}
+
+The base clustering algorithms provide foundational methods for comparison. K-Means clustering partitions the data into $k=5$ clusters, with $k$ selected based on a combination of the silhouette score and the elbow method to balance interpretability and cluster quality. To reduce sensitivity to random initialization, K-Means is run with 10 different random starts, selecting the best result by inertia minimization. Agglomerative clustering builds a hierarchy of clusters using Ward's linkage criterion, which merges clusters to minimize the total within-cluster variance at each step. DBSCAN identifies dense regions of data points as clusters, with the minimum number of samples per cluster ($min\_samples=5$) and the neighborhood radius ($\varepsilon$) tuned via k-distance plots to best fit each dataset. HDBSCAN extends DBSCAN by creating a hierarchical clustering structure and extracting clusters based on stability; however, it often produces small clusters or a high number of noise points, especially on certain datasets, depending on the chosen minimum cluster size. 
+
+\subsubsection{Ensemble Methods}
+
+To enhance clustering robustness, three ensemble methods are implemented that combine multiple base clusterings. The Cluster-based Similarity Partitioning Algorithm (CSPA) constructs a similarity matrix based on the co-occurrence of data points in base clusters, then applies spectral clustering to this matrix for final partitioning. The HyperGraph Partitioning Algorithm (HGPA) represents clusters as hyperedges in a hypergraph and employs graph partitioning heuristics to determine the optimal clustering assignment. The Meta-CLustering Algorithm (MCLA) operates at the cluster level, computing similarities between different base clustering results and applying meta-clustering to produce the final ensemble solution.
+
+\subsection{Validation Metrics}
+
+Clustering quality is evaluated using four complementary validation metrics. The Silhouette Score measures how well each point fits within its cluster compared to other clusters, with values ranging from -1 to 1, where higher scores indicate better clustering. The Davies-Bouldin Index computes the average similarity between each cluster and its most similar cluster, with lower values signifying better separation. The Calinski-Harabasz Index assesses the ratio of between-cluster dispersion to within-cluster dispersion, favoring higher values for well-separated clusters. Finally, Density-Based Clustering Validation (DBCV) provides a density-aware measure specifically designed for algorithms like DBSCAN and HDBSCAN.
+
+\subsection{Stability Analysis}
+
+\subsubsection{Bootstrap Stability}
+
+To assess the robustness of clustering solutions under data resampling, bootstrap stability analysis is implemented. This involves generating 50 bootstrap samples by randomly resampling (with replacement) the original dataset, effectively creating 50 shuffled versions of the data. Each clustering algorithm is applied to every resampled dataset, and the results are compared using Adjusted Rand Index (ARI) and Variation of Information (VI) metrics\footnote{ARI quantifies the similarity between two clusterings, adjusted for chance, with values close to 1 indicating high agreement. VI measures the amount of information lost and gained between two clusterings, with lower values indicating greater similarity.}. The mean stability scores across all bootstrap iterations provide a comprehensive measure of algorithm consistency.
+
+\subsubsection{Noise Injection Stability}
+
+Clustering robustness is further evaluated by introducing controlled perturbations. Gaussian noise with standard deviation $\sigma=0.05$ is added to the standardized data, and clustering algorithms are reapplied to the noisy dataset. Agreement between original and perturbed clustering results is measured using ARI and VI, revealing how well each method handles data uncertainty and noise.
+
+\subsection{Implementation Details}
+
+The complete analysis is implemented in Python, leveraging scikit-learn for base algorithms, hdbscan for density-based clustering, and custom implementations for ensemble methods. All experiments use fixed random seeds to ensure reproducibility. The codebase is organized modularly, with separate components handling data preprocessing, algorithm execution, evaluation metrics, and result visualization.
